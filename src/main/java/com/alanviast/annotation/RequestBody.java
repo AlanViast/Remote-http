@@ -1,12 +1,9 @@
 package com.alanviast.annotation;
 
-
 import java.lang.annotation.*;
 
 @Documented
-@Target({ElementType.METHOD})
+@Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RemotePost {
-
-    String value();
+public @interface RequestBody {
 }
