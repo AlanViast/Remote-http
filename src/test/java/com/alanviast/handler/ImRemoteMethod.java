@@ -10,7 +10,7 @@ import java.util.Map;
 public interface ImRemoteMethod {
 
 
-    @RemoteMethod("https://console.tim.qq.com/v4/sns/friend_add?")
+    @RemoteMethod("https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json")
     Map get(@Param("random") int random);
 
 

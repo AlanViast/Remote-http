@@ -4,21 +4,14 @@ import com.alanviast.remote.RemoteApiManager;
 import com.alanviast.util.JsonUtils;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.Map;
 
 public class RemoteMethodInvokeTest {
 
     @Test
     public void generate() {
-
-        RemoteApiManager remoteApiManager = new RemoteApiManager();
-
-        ImRemoteMethod imRemoteMethod = remoteApiManager.generate(ImRemoteMethod.class);
+        ImRemoteMethod imRemoteMethod = RemoteApiManager.generateInstance(ImRemoteMethod.class);
         Map response = imRemoteMethod.get(111);
-        System.out.println(JsonUtils.format(response));
-
-        response = imRemoteMethod.post(Collections.singletonMap("test", "xxx"), "hello");
         System.out.println(JsonUtils.format(response));
     }
 }

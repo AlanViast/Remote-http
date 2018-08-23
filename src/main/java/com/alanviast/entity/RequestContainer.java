@@ -5,6 +5,8 @@ import org.apache.http.client.utils.URIBuilder;
 
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class RequestContainer {
     private Method proxyMethod;
 
 
+    private Charset charset = StandardCharsets.UTF_8;
     private String url;
     private RequestMethod method = RequestMethod.GET;
     private Map<String, Object> queryMap;

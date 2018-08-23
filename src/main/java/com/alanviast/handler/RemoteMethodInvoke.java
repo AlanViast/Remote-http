@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
+import java.util.function.Consumer;
 
 /**
  * @author AlanViast
@@ -21,14 +22,20 @@ public class RemoteMethodInvoke implements InvocationHandler {
 
     private HandlerFactory handlerFactory;
 
-    public RemoteMethodInvoke(HandlerFactory handlerFactory) {
-        this.handlerFactory = handlerFactory;
+    public RemoteMethodInvoke() {
+        this.handlerFactory = new HandlerFactory();
+    }
+
+    private Consumer<RequestContainer> preRequestConsumer = requestContainer -> {
+    };
+
+    public void preRequest(Consumer<RequestContainer> consumer) {
+        preRequestConsumer.andThen(consumer);
     }
 
     public <T> T generate(Class<T> tClass) {
         // TODO 验证接口是否有注解
-        InvocationHandler invocationHandler = new RemoteMethodInvoke(this.handlerFactory);
-        return (T) Proxy.newProxyInstance(invocationHandler.getClass().getClassLoader(), new Class[]{tClass}, invocationHandler);
+        return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{tClass}, this);
     }
 
     @Override
@@ -44,14 +51,24 @@ public class RemoteMethodInvoke implements InvocationHandler {
         requestContainer.setUrl(remoteMethod.value());
         requestContainer.setMethod(remoteMethod.method());
 
+        // 把注解的参数都封装到requestContainer中
         this.putParam(method, args, requestContainer);
-        // doSomething
+
+        // 前置处理器执行
+        this.preRequestConsumer.accept(requestContainer);
         Response response = handlerFactory.handler(requestContainer);
-        return JsonUtils.parse(response.returnContent().asString(), method.getReturnType());
+        return JsonUtils.parse(response.returnContent().asString(requestContainer.getCharset()), method.getReturnType());
         // after handler
     }
 
-    public void putParam(Method method, Object[] args, RequestContainer requestContainer) {
+    /**
+     * 封装具体请求, 把body还有query格式化到Request里面
+     *
+     * @param method           代理方法
+     * @param args             代理方法的参数
+     * @param requestContainer 请求容器
+     */
+    private void putParam(Method method, Object[] args, RequestContainer requestContainer) {
         Parameter[] parameters = method.getParameters();
 
         for (int i = 0; i < parameters.length; i++) {
