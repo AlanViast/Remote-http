@@ -1,6 +1,5 @@
 package com.alanviast.handler;
 
-import com.alanviast.annotation.RemoteMethod;
 import com.alanviast.entity.RequestContainer;
 import com.alanviast.util.JsonUtils;
 import org.apache.http.client.fluent.Request;
@@ -42,15 +41,15 @@ public class HandlerFactory implements RemoteHandler {
 
 
     public Request buildMethod(RequestContainer requestContainer) throws UnsupportedEncodingException {
-        RemoteMethod remoteMethod = requestContainer.getProxyMethod().getAnnotation(RemoteMethod.class);
-        if (null == remoteMethod) {
-            throw new RuntimeException("not a remote invoke method");
-        }
-        requestContainer.setUrl(remoteMethod.value());
-
         String url = requestContainer.getUrl();
-        StringEntity stringEntity = new StringEntity(JsonUtils.format(requestContainer.getBody()));
-        switch (remoteMethod.method()) {
+
+        String bodyString = JsonUtils.format(requestContainer.getBody());
+        StringEntity stringEntity = new StringEntity(bodyString);
+        System.out.println("-------------------");
+        System.out.println(url);
+        System.out.println(bodyString);
+        System.out.println("-------------------");
+        switch (requestContainer.getMethod()) {
             case GET:
                 return Request.Get(url);
             case POST:

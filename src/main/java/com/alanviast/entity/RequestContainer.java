@@ -1,8 +1,10 @@
 package com.alanviast.entity;
 
 import lombok.Data;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -52,5 +54,18 @@ public class RequestContainer {
     public Map<String, String> getHeaders() {
         this.headers = Optional.ofNullable(headers).orElse(new HashMap<>(10));
         return headers;
+    }
+
+
+    public String getUrl() {
+        try {
+            URIBuilder uriBuilder = new URIBuilder(this.url);
+            this.getQueryMap().forEach((key, value) -> {
+                uriBuilder.addParameter(key, value.toString());
+            });
+            return uriBuilder.build().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
