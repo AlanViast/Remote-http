@@ -16,7 +16,7 @@ public interface ImRemoteMethod {
 
 2. 调用该方法
 
-```
+```java
 public class RemoteMethodInvokeTest {
 
     @Test
@@ -33,7 +33,7 @@ public class RemoteMethodInvokeTest {
 
 3. 输出结果
 
-```
+```java
 {"ActionStatus":"FAIL","ErrorCode":70032,"ErrorInfo":""}
 {"ActionStatus":"FAIL","ErrorCode":70032,"ErrorInfo":""}
 ```
