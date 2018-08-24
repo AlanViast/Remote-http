@@ -1,10 +1,8 @@
 package com.alanviast.handler;
 
-import com.alanviast.annotation.Param;
-import com.alanviast.annotation.Query;
-import com.alanviast.annotation.RemoteMethod;
-import com.alanviast.annotation.RequestBody;
+import com.alanviast.annotation.*;
 import com.alanviast.entity.RequestContainer;
+import com.alanviast.entity.RequestMethod;
 import com.alanviast.util.JsonUtils;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.util.Asserts;
@@ -51,14 +49,25 @@ public class RemoteMethodInvoke implements InvocationHandler {
         requestContainer.setUrl(remoteMethod.value());
         requestContainer.setMethod(remoteMethod.method());
         requestContainer.setRequestDataType(remoteMethod.dataType());
+
+        // 封装Header注解
+        this.putHeader(method, requestContainer);
         // 把注解的参数都封装到requestContainer中
         this.putParam(method, args, requestContainer);
-
         // 前置处理器执行
-        this.preRequestConsumer.accept(requestContainer);
+        preRequestConsumer.accept(requestContainer);
         Response response = handlerFactory.handler(requestContainer);
         return JsonUtils.parse(response.returnContent().asString(requestContainer.getCharset()), method.getReturnType());
         // after handler
+    }
+
+
+    private void putHeader(Method method, RequestContainer requestContainer) {
+        if (method.isAnnotationPresent(Header.class)) {
+            for (Header header : method.getAnnotationsByType(Header.class)) {
+                requestContainer.header(header.name(), header.value());
+            }
+        }
     }
 
     /**
@@ -77,13 +86,19 @@ public class RemoteMethodInvoke implements InvocationHandler {
             Parameter parameter = parameters[i];
             if (parameter.isAnnotationPresent(Param.class)) {
                 Param param = parameter.getAnnotation(Param.class);
-                requestContainer.query(param.value(), args[i]);
+
+                // Get 请求放在QueryMap中, 其他的放Body
+                if (RequestMethod.GET.equals(requestContainer.getMethod())) {
+                    requestContainer.query(param.value(), args[i]);
+                } else {
+                    requestContainer.body(param.value(), args[i]);
+                }
 
             } else if (parameter.isAnnotationPresent(RequestBody.class)) {
                 requestContainer.getBody().putAll(JsonUtils.toMap(args[i]));
 
             } else if (parameter.isAnnotationPresent(Query.class)) {
-                requestContainer.getBody().putAll(JsonUtils.toMap(args[i]));
+                requestContainer.getQueryMap().putAll(JsonUtils.toMap(args[i]));
 
             } else {
                 // 暂时不处理没有注解的参数

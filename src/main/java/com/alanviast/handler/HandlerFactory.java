@@ -16,7 +16,12 @@ public class HandlerFactory implements RemoteHandler {
 
     @Override
     public Response handler(RequestContainer requestContainer) throws IOException {
-        return this.buildMethod(requestContainer).execute();
+        Request request = this.buildMethod(requestContainer);
+
+        // 添加请求头
+        requestContainer.getHeaders().forEach(request::addHeader);
+
+        return request.execute();
     }
 
 
