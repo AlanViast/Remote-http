@@ -50,7 +50,7 @@ public class RemoteMethodInvoke implements InvocationHandler {
         requestContainer.setProxyMethod(method);
         requestContainer.setUrl(remoteMethod.value());
         requestContainer.setMethod(remoteMethod.method());
-
+        requestContainer.setRequestDataType(remoteMethod.dataType());
         // 把注解的参数都封装到requestContainer中
         this.putParam(method, args, requestContainer);
 

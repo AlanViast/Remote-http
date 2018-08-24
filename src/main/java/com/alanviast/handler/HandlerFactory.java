@@ -2,12 +2,12 @@ package com.alanviast.handler;
 
 import com.alanviast.entity.RequestContainer;
 import com.alanviast.util.JsonUtils;
+import com.alanviast.util.ParameterUtils;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.StringEntity;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author AlanViast
@@ -20,11 +20,21 @@ public class HandlerFactory implements RemoteHandler {
     }
 
 
-    private Request buildMethod(RequestContainer requestContainer) throws UnsupportedEncodingException {
+    private Request buildMethod(RequestContainer requestContainer) {
         String url = requestContainer.getUrl();
 
-        String bodyString = JsonUtils.format(requestContainer.getBody());
+        String bodyString;
+        switch (requestContainer.getRequestDataType()) {
+            case APPLICATION_FORM_URLENCODED:
+                bodyString = ParameterUtils.formatFormEncode(requestContainer.getBody());
+                break;
+            case APPLICATION_JSON:
+            default:
+                bodyString = JsonUtils.format(requestContainer.getBody());
+        }
+
         StringEntity stringEntity = new StringEntity(bodyString, requestContainer.getCharset());
+        stringEntity.setContentType(requestContainer.getRequestDataType().getValue());
         switch (requestContainer.getMethod()) {
             case GET:
                 return Request.Get(url);

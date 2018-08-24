@@ -20,7 +20,7 @@ public class RequestContainer {
 
     private Method proxyMethod;
 
-
+    private RequestDataType requestDataType;
     private Charset charset = StandardCharsets.UTF_8;
     private String url;
     private RequestMethod method = RequestMethod.GET;
