@@ -54,8 +54,7 @@ public class RemoteMethodInvoke implements InvocationHandler {
     }
 
     private void preHadler(Method method, RequestContainer requestContainer) throws IllegalAccessException, InstantiationException {
-        if (method.isAnnotationPresent(PreHandler.class)) {
-            PreHandler preHandler = method.getAnnotation(PreHandler.class);
+        for (PreHandler preHandler : method.getAnnotationsByType(PreHandler.class)) {
             Class<? extends RemotePreHandler> clazz = preHandler.value();
             clazz.newInstance().handler(requestContainer);
         }
@@ -63,10 +62,8 @@ public class RemoteMethodInvoke implements InvocationHandler {
 
 
     private void putHeader(Method method, RequestContainer requestContainer) {
-        if (method.isAnnotationPresent(Header.class)) {
-            for (Header header : method.getAnnotationsByType(Header.class)) {
-                requestContainer.header(header.name(), header.value());
-            }
+        for (Header header : method.getAnnotationsByType(Header.class)) {
+            requestContainer.header(header.name(), header.value());
         }
     }
 

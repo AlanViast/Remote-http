@@ -5,10 +5,7 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(value = Headers.class)
-public @interface Header {
+public @interface Headers {
 
-    String name();
-
-    String value();
+    Header[] value();
 }

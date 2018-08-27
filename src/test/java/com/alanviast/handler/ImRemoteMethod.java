@@ -1,9 +1,6 @@
 package com.alanviast.handler;
 
-import com.alanviast.annotation.Param;
-import com.alanviast.annotation.PreHandler;
-import com.alanviast.annotation.RemoteMethod;
-import com.alanviast.annotation.RequestBody;
+import com.alanviast.annotation.*;
 import com.alanviast.entity.RequestDataType;
 import com.alanviast.entity.RequestMethod;
 
@@ -19,6 +16,9 @@ public interface ImRemoteMethod {
     @RemoteMethod(value = "https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json",
             method = RequestMethod.POST, dataType = RequestDataType.APPLICATION_FORM_URLENCODED)
     @PreHandler(PreHanderTest.class)
+    @PreHandler(PreHanderTest.class)
+    @Header(name = "test", value = "test2")
+    @Header(name = "test", value = "test2")
     Map post(@RequestBody Map map, @Param("test2") String test2);
 
 }
