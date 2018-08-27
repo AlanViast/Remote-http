@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
-import java.util.function.Consumer;
 
 /**
  * @author AlanViast
@@ -22,13 +21,6 @@ public class RemoteMethodInvoke implements InvocationHandler {
 
     public RemoteMethodInvoke() {
         this.handlerFactory = new HandlerFactory();
-    }
-
-    private Consumer<RequestContainer> preRequestConsumer = requestContainer -> {
-    };
-
-    public void preRequest(Consumer<RequestContainer> consumer) {
-        preRequestConsumer.andThen(consumer);
     }
 
     public <T> T generate(Class<T> tClass) {
@@ -55,10 +47,18 @@ public class RemoteMethodInvoke implements InvocationHandler {
         // 把注解的参数都封装到requestContainer中
         this.putParam(method, args, requestContainer);
         // 前置处理器执行
-        preRequestConsumer.accept(requestContainer);
+        this.preHadler(method, requestContainer);
         Response response = handlerFactory.handler(requestContainer);
         return JsonUtils.parse(response.returnContent().asString(requestContainer.getCharset()), method.getReturnType());
         // after handler
+    }
+
+    private void preHadler(Method method, RequestContainer requestContainer) throws IllegalAccessException, InstantiationException {
+        if (method.isAnnotationPresent(PreHandler.class)) {
+            PreHandler preHandler = method.getAnnotation(PreHandler.class);
+            Class<? extends RemotePreHandler> clazz = preHandler.value();
+            clazz.newInstance().handler(requestContainer);
+        }
     }
 
 

@@ -20,7 +20,7 @@ public class HandlerFactory implements RemoteHandler {
 
         // 添加请求头
         requestContainer.getHeaders().forEach(request::addHeader);
-
+        System.out.println(requestContainer.getHeaders());
         return request.execute();
     }
 
