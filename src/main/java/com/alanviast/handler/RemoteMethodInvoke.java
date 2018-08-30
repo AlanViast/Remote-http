@@ -23,6 +23,7 @@ public class RemoteMethodInvoke implements InvocationHandler {
         this.handlerFactory = new HandlerFactory();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T generate(Class<T> tClass) {
         // TODO 验证接口是否有注解
         return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{tClass}, this);
@@ -96,11 +97,7 @@ public class RemoteMethodInvoke implements InvocationHandler {
 
             } else if (parameter.isAnnotationPresent(Query.class)) {
                 requestContainer.getQueryMap().putAll(JsonUtils.toMap(args[i]));
-
-            } else {
-                // 暂时不处理没有注解的参数
             }
-
         }
     }
 
