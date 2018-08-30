@@ -3,6 +3,7 @@ package com.alanviast.handler;
 import com.alanviast.annotation.*;
 import com.alanviast.entity.RequestContainer;
 import com.alanviast.entity.RequestMethod;
+import com.alanviast.entity.SuppressWarningType;
 import com.alanviast.util.JsonUtils;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.util.Asserts;
@@ -23,7 +24,7 @@ public class RemoteMethodInvoke implements InvocationHandler {
         this.handlerFactory = new HandlerFactory();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(SuppressWarningType.UNCHECKED)
     public <T> T generate(Class<T> tClass) {
         // TODO 验证接口是否有注解
         return (T) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{tClass}, this);
