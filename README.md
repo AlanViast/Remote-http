@@ -58,8 +58,8 @@ Map post(@RequestBody Map map, @Param("test2") String test2);
 public class PreHanderTest implements RemotePreHandler {
 
     @Override
-    public void handler(RequestContainer requestContainer) {
-        requestContainer.header("test", "testHeader");
+    public void handler(RequestHandler requestHandler) {
+        requestHandler.addHeader(Long.toString(System.currentTimeMillis()), "testHeader");
     }
 
 }
