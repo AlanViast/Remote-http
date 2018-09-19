@@ -12,9 +12,8 @@ import java.io.IOException;
 /**
  * @author AlanViast
  */
-public class HandlerFactory implements RemoteHandler {
+public class HandlerFactory {
 
-    @Override
     public Response handler(RequestContainer requestContainer) throws IOException {
         Request request = this.buildMethod(requestContainer);
         // 添加请求头

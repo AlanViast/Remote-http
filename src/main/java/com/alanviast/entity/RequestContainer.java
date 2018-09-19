@@ -1,10 +1,9 @@
 package com.alanviast.entity;
 
+import com.alanviast.util.UrlUtils;
 import lombok.Data;
-import org.apache.http.client.utils.URIBuilder;
 
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -61,14 +60,6 @@ public class RequestContainer {
 
 
     public String getUrl() {
-        try {
-            URIBuilder uriBuilder = new URIBuilder(this.url);
-            this.getQueryMap().forEach((key, value) -> {
-                uriBuilder.addParameter(key, value.toString());
-            });
-            return uriBuilder.build().toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        return UrlUtils.formatUrl(this.url, this.getQueryMap());
     }
 }
