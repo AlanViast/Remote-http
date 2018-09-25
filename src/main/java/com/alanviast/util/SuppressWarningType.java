@@ -1,4 +1,4 @@
-package com.alanviast.entity;
+package com.alanviast.util;
 
 
 /**

@@ -14,6 +14,12 @@ public enum RequestMethod {
     /**
      * Post请求
      */
-    POST
+    POST,
+
+    PATCH,
+
+    PUT,
+
+    DELETE
 
 }

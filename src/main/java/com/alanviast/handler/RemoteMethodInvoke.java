@@ -2,9 +2,9 @@ package com.alanviast.handler;
 
 import com.alanviast.annotation.*;
 import com.alanviast.entity.RequestMethod;
-import com.alanviast.entity.SuppressWarningType;
 import com.alanviast.handler.impl.HttpClientFluentRequestHandler;
 import com.alanviast.util.JsonUtils;
+import com.alanviast.util.SuppressWarningType;
 import org.apache.http.util.Asserts;
 
 import java.lang.reflect.InvocationHandler;

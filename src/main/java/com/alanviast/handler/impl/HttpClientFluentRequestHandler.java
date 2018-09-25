@@ -76,8 +76,16 @@ public class HttpClientFluentRequestHandler implements RequestHandler {
                     request = Request.Get(targetUrl);
                     break;
                 case POST:
-                    String bodyString = ParameterUtils.formatBody(this.requestDataType, bodyParameter);
-                    request = Request.Post(targetUrl).body(new StringEntity(bodyString));
+                    request = Request.Post(targetUrl).body(new StringEntity(ParameterUtils.formatBody(this.requestDataType, bodyParameter)));
+                    break;
+                case PATCH:
+                    request = Request.Patch(targetUrl).body(new StringEntity(ParameterUtils.formatBody(this.requestDataType, bodyParameter)));
+                    break;
+                case PUT:
+                    request = Request.Put(targetUrl).body(new StringEntity(ParameterUtils.formatBody(this.requestDataType, bodyParameter)));
+                    break;
+                case DELETE:
+                    request = Request.Delete(targetUrl);
                     break;
                 default:
                     request = Request.Get(targetUrl);
