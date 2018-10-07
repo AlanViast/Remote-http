@@ -17,6 +17,7 @@ import java.lang.reflect.Proxy;
  */
 public class RemoteMethodInvoke implements InvocationHandler {
 
+    private RequestHandler defaultRequestHandle = new HttpClientFluentRequestHandler();
 
     @SuppressWarnings(SuppressWarningType.UNCHECKED)
     public <T> T generate(Class<T> tClass) {
@@ -27,6 +28,8 @@ public class RemoteMethodInvoke implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         RequestHandler requestHandler = new HttpClientFluentRequestHandler();
+        // 设置全局参数
+        defaultRequestHandle.extendRequestHandler(requestHandler);
 
         // 封装成具体的请求对象
         RemoteMethod remoteMethod = method.getAnnotation(RemoteMethod.class);
@@ -41,13 +44,22 @@ public class RemoteMethodInvoke implements InvocationHandler {
         this.putParam(remoteMethod.method(), method, args, requestHandler);
 
         // 前置处理器执行
-        this.preHadler(method, requestHandler);
+        this.preHandler(method, requestHandler);
 
         return JsonUtils.parse(requestHandler.execute(), method.getReturnType());
         // after handler
     }
 
-    private void preHadler(Method method, RequestHandler requestHandler) throws IllegalAccessException, InstantiationException {
+    public RequestHandler getDefaultRequestHandle() {
+        return defaultRequestHandle;
+    }
+
+    public void addHeader(String key, String value) {
+        defaultRequestHandle.addHeader(key, value);
+    }
+
+
+    private void preHandler(Method method, RequestHandler requestHandler) throws IllegalAccessException, InstantiationException {
         for (PreHandler preHandler : method.getAnnotationsByType(PreHandler.class)) {
             Class<? extends RemotePreHandler> clazz = preHandler.value();
             clazz.newInstance().handler(requestHandler);
@@ -55,6 +67,11 @@ public class RemoteMethodInvoke implements InvocationHandler {
     }
 
 
+    /**
+     * 解析请求方法上的Header
+     * @param method 被调用的方法
+     * @param requestHandler 请求容器
+     */
     private void putHeader(Method method, RequestHandler requestHandler) {
         for (Header header : method.getAnnotationsByType(Header.class)) {
             requestHandler.addHeader(header.name(), header.value());

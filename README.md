@@ -33,12 +33,12 @@ public class RemoteMethodInvokeTest {
 
 3. 输出结果
 
-```java
+```json
 {"ActionStatus":"FAIL","ErrorCode":70032,"ErrorInfo":""}
 {"ActionStatus":"FAIL","ErrorCode":70032,"ErrorInfo":""}
 ```
 
-4. 固定Header
+4. 通过注解设置Header
 
 ```java
 @RemoteMethod(value = "https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json", method = RequestMethod.POST)
@@ -46,13 +46,8 @@ public class RemoteMethodInvokeTest {
 Map post(@RequestBody Map map, @Param("test2") String test2);
 ```
 
-5. 动态修改参数
+5. 通过提供对应的Handler设置参数
 
-```java
-@RemoteMethod(value = "https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json", method = RequestMethod.POST)
-@PreHandler(PreHanderTest.class)
-Map post(@RequestBody Map map, @Param("test2") String test2);
-```
 
 ```java
 public class PreHanderTest implements RemotePreHandler {
@@ -65,5 +60,19 @@ public class PreHanderTest implements RemotePreHandler {
 }
 ```
 
+```java
+@RemoteMethod(value = "https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json", method = RequestMethod.POST)
+@PreHandler(PreHanderTest.class)
+Map post(@RequestBody Map map, @Param("test2") String test2);
+```
+
+6. 通过Manager对象设置请求头
+
+```java
+RemoteApiManager remoteApiManager = RemoteApiManager.getInstance();
+remoteApiManager.addHeader("globalTestHeader", "test12324");
+
+ImRemoteMethod imRemoteMethod = remoteApiManager.generate(ImRemoteMethod.class);
+```
 
 > [retrofit](https://square.github.io/retrofit/)

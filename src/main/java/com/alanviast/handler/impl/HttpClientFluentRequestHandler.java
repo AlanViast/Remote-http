@@ -52,6 +52,13 @@ public class HttpClientFluentRequestHandler implements RequestHandler {
     }
 
     @Override
+    public void extendRequestHandler(RequestHandler requestHandler) {
+        queryParameter.forEach(requestHandler::addQuery);
+        bodyParameter.forEach(requestHandler::addParameter);
+        headers.forEach(requestHandler::addHeader);
+    }
+
+    @Override
     public String execute() {
         try {
             Request request = buildRequest();

@@ -44,6 +44,13 @@ public interface RequestHandler {
     void addHeader(String key, String value);
 
     /**
+     * 将当前的 Query Body 以及Header传递给传进来的对象
+     *
+     * @param requestHandler 请求
+     */
+    void extendRequestHandler(RequestHandler requestHandler);
+
+    /**
      * 执行请求方法
      *
      * @return 返回response body

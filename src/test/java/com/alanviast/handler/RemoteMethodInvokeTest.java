@@ -12,6 +12,8 @@ public class RemoteMethodInvokeTest {
     @Test
     public void generate() {
         RemoteApiManager remoteApiManager = RemoteApiManager.getInstance();
+        remoteApiManager.addHeader("globalTestHeader", "test12324");
+
         ImRemoteMethod imRemoteMethod = remoteApiManager.generate(ImRemoteMethod.class);
         Map response = imRemoteMethod.get(111);
         System.out.println(JsonUtils.format(response));
