@@ -76,3 +76,9 @@ ImRemoteMethod imRemoteMethod = remoteApiManager.generate(ImRemoteMethod.class);
 ```
 
 > [retrofit](https://square.github.io/retrofit/)
+
+
+### TODO
+
+- [ ] 全局容器, 处理请求认证之类的Header, 不需要handler每次去设置.
+- [ ] 接口定义对应的Domain注解, 方法中对应uri即刻

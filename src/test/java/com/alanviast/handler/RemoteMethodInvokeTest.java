@@ -20,5 +20,15 @@ public class RemoteMethodInvokeTest {
 
         response = imRemoteMethod.post(Collections.singletonMap("test", "test2"), "hello");
         System.out.println(JsonUtils.format(response));
+
+
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        for (StackTraceElement stackTraceElement : stackTraceElements) {
+            System.out.println(stackTraceElement.getClassName());
+            System.out.println(stackTraceElement.getMethodName());
+            System.out.println(stackTraceElement.getLineNumber());
+            System.out.println(stackTraceElement.getFileName());
+            System.out.println("-------------------------------");
+        }
     }
 }
