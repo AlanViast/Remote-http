@@ -3,13 +3,15 @@
 
 1. 定义一个接口
 ```java
+@RemoteDomain("https://console.tim.qq.com/v4/sns")
 public interface ImRemoteMethod {
 
-    @RemoteMethod("https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json")
+    @RemoteMethod("/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json")
     Map get(@Param("random") int random);
 
 
-    @RemoteMethod(value = "https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json", method = RequestMethod.POST)
+    @RemoteMethod(value = "/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json",
+                method = RequestMethod.POST, dataType = RequestDataType.APPLICATION_FORM_URLENCODED)
     Map post(@RequestBody Map map, @Param("test2") String test2);
 }
 ```
