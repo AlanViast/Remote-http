@@ -80,5 +80,6 @@ ImRemoteMethod imRemoteMethod = remoteApiManager.generate(ImRemoteMethod.class);
 
 ### TODO
 
-- [ ] 全局容器, 处理请求认证之类的Header, 不需要handler每次去设置.
-- [ ] 接口定义对应的Domain注解, 方法中对应uri即刻
+- [x] 全局容器, 处理请求认证之类的Header, 不需要handler每次去设置.
+- [x] 接口定义对应的Domain注解, 方法中对应uri即刻
+- [ ] JSON 改成对应的 resolve

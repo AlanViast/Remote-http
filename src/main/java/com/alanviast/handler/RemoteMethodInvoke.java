@@ -4,6 +4,7 @@ import com.alanviast.annotation.*;
 import com.alanviast.entity.RequestMethod;
 import com.alanviast.handler.impl.HttpClientFluentRequestHandler;
 import com.alanviast.util.JsonUtils;
+import com.alanviast.util.StringUtils;
 import com.alanviast.util.SuppressWarningType;
 import org.apache.http.util.Asserts;
 
@@ -35,19 +36,31 @@ public class RemoteMethodInvoke implements InvocationHandler {
         RemoteMethod remoteMethod = method.getAnnotation(RemoteMethod.class);
         Asserts.check(null != remoteMethod && !remoteMethod.value().isEmpty(), "not a remote invoke method");
 
-        requestHandler.setMethod(remoteMethod.method(), remoteMethod.value(), remoteMethod.dataType());
+        requestHandler.setMethod(remoteMethod.method(), this.getDomain(method) + remoteMethod.value(), remoteMethod.dataType());
 
         // 封装Header注解
         this.putHeader(method, requestHandler);
-
         // 把注解的参数都封装到requestContainer中
         this.putParam(remoteMethod.method(), method, args, requestHandler);
-
         // 前置处理器执行
         this.preHandler(method, requestHandler);
 
         return JsonUtils.parse(requestHandler.execute(), method.getReturnType());
         // after handler
+    }
+
+    /**
+     * 获取对应的RemoteDomain的值
+     *
+     * @return RemoteDomain注解中的值
+     */
+    private String getDomain(Method method) {
+        Class targetInterface = method.getDeclaringClass();
+        if (targetInterface.isAnnotationPresent(RemoteDomain.class)) {
+            RemoteDomain remoteDomain = (RemoteDomain) targetInterface.getAnnotation(RemoteDomain.class);
+            return remoteDomain.value();
+        }
+        return StringUtils.EMPTY;
     }
 
     public RequestHandler getDefaultRequestHandle() {
@@ -69,7 +82,8 @@ public class RemoteMethodInvoke implements InvocationHandler {
 
     /**
      * 解析请求方法上的Header
-     * @param method 被调用的方法
+     *
+     * @param method         被调用的方法
      * @param requestHandler 请求容器
      */
     private void putHeader(Method method, RequestHandler requestHandler) {

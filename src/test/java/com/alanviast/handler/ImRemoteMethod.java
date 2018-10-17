@@ -6,14 +6,15 @@ import com.alanviast.entity.RequestMethod;
 
 import java.util.Map;
 
+@RemoteDomain("https://console.tim.qq.com/v4/sns")
 public interface ImRemoteMethod {
 
 
-    @RemoteMethod("https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json")
+    @RemoteMethod("/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json")
     Map get(@Param("random") int random);
 
 
-    @RemoteMethod(value = "https://console.tim.qq.com/v4/sns/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json",
+    @RemoteMethod(value = "/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json",
             method = RequestMethod.POST, dataType = RequestDataType.APPLICATION_FORM_URLENCODED)
     @PreHandler(PreHanderTest.class)
     @PreHandler(PreHanderTest.class)
