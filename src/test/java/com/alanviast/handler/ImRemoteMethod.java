@@ -6,7 +6,7 @@ import com.alanviast.entity.RequestMethod;
 
 import java.util.Map;
 
-@RemoteDomain("https://console.tim.qq.com/v4/sns")
+@RemoteApi(domain = "https://console.tim.qq.com/v4/sns")
 public interface ImRemoteMethod {
 
 

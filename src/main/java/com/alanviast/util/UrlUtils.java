@@ -30,4 +30,22 @@ public class UrlUtils {
         }
     }
 
+    /**
+     * 路径格式化
+     *
+     * @param url          域名
+     * @param resourcePath 资源名
+     * @return
+     */
+    public static String formatUrl(String url, String resourcePath) {
+        try {
+            URIBuilder uriBuilder = new URIBuilder(url);
+            uriBuilder.setPath(uriBuilder.getPath() + resourcePath);
+
+            return uriBuilder.build().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

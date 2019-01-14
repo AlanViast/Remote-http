@@ -6,6 +6,7 @@ import com.alanviast.handler.impl.HttpClientFluentRequestHandler;
 import com.alanviast.util.JsonUtils;
 import com.alanviast.util.StringUtils;
 import com.alanviast.util.SuppressWarningType;
+import com.alanviast.util.UrlUtils;
 import org.apache.http.util.Asserts;
 
 import java.lang.reflect.InvocationHandler;
@@ -36,7 +37,8 @@ public class RemoteMethodInvoke implements InvocationHandler {
         RemoteMethod remoteMethod = method.getAnnotation(RemoteMethod.class);
         Asserts.check(null != remoteMethod && !remoteMethod.value().isEmpty(), "not a remote invoke method");
 
-        requestHandler.setMethod(remoteMethod.method(), this.getDomain(method) + remoteMethod.value(), remoteMethod.dataType());
+        String targetUrl = UrlUtils.formatUrl(this.getDomain(method), remoteMethod.value());
+        requestHandler.setMethod(remoteMethod.method(), targetUrl, remoteMethod.dataType());
 
         // 封装Header注解
         this.putHeader(method, requestHandler);
@@ -50,15 +52,15 @@ public class RemoteMethodInvoke implements InvocationHandler {
     }
 
     /**
-     * 获取对应的RemoteDomain的值
+     * 获取对应的 RemoteApi 的 domain 值
      *
-     * @return RemoteDomain注解中的值
+     * @return domain值
      */
     private String getDomain(Method method) {
         Class targetInterface = method.getDeclaringClass();
-        if (targetInterface.isAnnotationPresent(RemoteDomain.class)) {
-            RemoteDomain remoteDomain = (RemoteDomain) targetInterface.getAnnotation(RemoteDomain.class);
-            return remoteDomain.value();
+        if (targetInterface.isAnnotationPresent(RemoteApi.class)) {
+            RemoteApi remoteDomain = (RemoteApi) targetInterface.getAnnotation(RemoteApi.class);
+            return remoteDomain.domain();
         }
         return StringUtils.EMPTY;
     }

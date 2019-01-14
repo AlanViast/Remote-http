@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RemoteDomain {
+public @interface RemoteApi {
 
-    String value() default "";
+    String domain() default "";
 }

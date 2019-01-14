@@ -3,7 +3,7 @@
 
 1. 定义一个接口
 ```java
-@RemoteDomain("https://console.tim.qq.com/v4/sns")
+@RemoteApi("https://console.tim.qq.com/v4/sns")
 public interface ImRemoteMethod {
 
     @RemoteMethod("/friend_update?usersig=xxx&identifier=admin&sdkappid=88888888&random=99999999&contenttype=json")
