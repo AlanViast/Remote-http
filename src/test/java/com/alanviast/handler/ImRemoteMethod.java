@@ -20,6 +20,6 @@ public interface ImRemoteMethod {
     @PreHandler(PreHanderTest.class)
     @Header(name = "test", value = "test2")
     @Header(name = "test", value = "test2")
-    Map post(@RequestBody Map map, @Param("test2") String test2);
+    Map post(@RequestBody Map map, @Param("test2") String test2, @Header(name = "test") int headerValue);
 
 }

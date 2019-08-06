@@ -18,7 +18,7 @@ public class RemoteMethodInvokeTest {
         Map response = imRemoteMethod.get(111);
         System.out.println(JsonUtils.format(response));
 
-        response = imRemoteMethod.post(Collections.singletonMap("test", "test2"), "hello");
+        response = imRemoteMethod.post(Collections.singletonMap("test", "test2"), "hello", 10);
         System.out.println(JsonUtils.format(response));
     }
 }

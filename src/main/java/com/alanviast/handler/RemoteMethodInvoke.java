@@ -124,6 +124,10 @@ public class RemoteMethodInvoke implements InvocationHandler {
 
             } else if (parameter.isAnnotationPresent(Query.class)) {
                 JsonUtils.toMap(args[i]).forEach(requestHandler::addQuery);
+            } else if (parameter.isAnnotationPresent(Header.class)) {
+                // 添加请求头
+                Header annotation = parameter.getAnnotation(Header.class);
+                requestHandler.addHeader(annotation.name(), args[i].toString());
             }
         }
     }
